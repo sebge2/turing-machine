@@ -20,6 +20,17 @@ public class Computer {
         );
     }
 
+    public int compute(int a, int b, NumericOperationName operationName) {
+        final NumericOperation operation = getNumericOperation(operationName);
+
+        final List<TransitionTable<Integer>> transitions = operation.getTransitions();
+        final GlobalState<Integer> state = new GlobalState<>(transitions, transitions.getFirst(), Register.create(toNumericSymbols(a, b)));
+
+        return toIntValue(
+                doCompute(state)
+        );
+    }
+
     private <S> List<S> doCompute(GlobalState<S> state) {
         final S originalSymbol = state.register().current().orElse(null);
         final Transition<S> transition = state.currentTable().getTransition(originalSymbol);

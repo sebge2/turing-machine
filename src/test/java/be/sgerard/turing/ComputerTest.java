@@ -63,5 +63,34 @@ class ComputerTest {
             assertEquals(999, actual);
         }
     }
+
+    @DisplayName("Multiply")
+    @Nested
+    class MultiplySingleDigit {
+
+        @Test
+        void mul7x8() {
+            final int actual = computer.compute(7, 8, NumericOperationName.MULTIPLY);
+            assertEquals(56, actual);
+        }
+
+        @Test
+        void mul9x9() {
+            final int actual = computer.compute(9, 9, NumericOperationName.MULTIPLY);
+            assertEquals(81, actual);
+        }
+
+        @Test
+        void mul0x5() {
+            final int actual = computer.compute(0, 5, NumericOperationName.MULTIPLY);
+            assertEquals(0, actual);
+        }
+
+        @Test
+        void mul1x7() {
+            final int actual = computer.compute(1, 7, NumericOperationName.MULTIPLY);
+            assertEquals(7, actual);
+        }
+    }
 }
 

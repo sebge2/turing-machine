@@ -18,6 +18,8 @@ import static java.util.Arrays.asList;
  * - C: if there is no left neighbor (null) -> move right to E and STOP with 0 (so single 0 -> 0). Otherwise go right to D.
  * - D: we're back on the 0 we inspected from C -> write 9, go left, and continue in B.
  * - E: finalize single-zero case (stay 0 and STOP).
+ *
+ * @author Jetbrains Junie
  */
 public class SubtractOperation implements NumericOperation {
 

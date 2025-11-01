@@ -8,7 +8,10 @@ import java.util.List;
 import static be.sgerard.turing.RegisterAction.*;
 import static java.util.Arrays.asList;
 
-public class SumOperation implements NumericOperation {
+/**
+ * Based on Youtube video from Science Etonante
+ */
+public class SimpleSumOperation implements NumericOperation {
 
     public static final String TABLE_A = "A";
     public static final String TABLE_B = "B";

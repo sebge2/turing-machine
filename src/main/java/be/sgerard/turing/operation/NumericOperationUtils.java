@@ -2,6 +2,7 @@ package be.sgerard.turing.operation;
 
 import lombok.experimental.UtilityClass;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -20,6 +21,16 @@ public class NumericOperationUtils {
                 .toList();
     }
 
+    public static List<Integer> toNumericSymbols(int a, int b) {
+        if (a < 0 || b < 0) {
+            throw new IllegalArgumentException("Invalid numeric values [" + a + ", " + b + "]");
+        }
+        final List<Integer> result = new ArrayList<>(toNumericSymbols(a));
+        result.add(null); // separator
+        result.addAll(toNumericSymbols(b));
+        return result;
+    }
+
     public static int toIntValue(List<Integer> symbols) {
         if (symbols.isEmpty()) {
             return 0;
@@ -35,8 +46,9 @@ public class NumericOperationUtils {
 
     public static NumericOperation getNumericOperation(NumericOperationName name) {
         return switch (name) {
-            case SUM -> new SumOperation();
+            case SUM -> new SimpleSumOperation();
             case SUBTRACT -> new SubtractOperation();
+            case MULTIPLY -> new MultiplyOperation();
         };
     }
 }

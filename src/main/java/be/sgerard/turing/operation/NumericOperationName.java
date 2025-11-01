@@ -4,5 +4,6 @@ public enum NumericOperationName {
 
     SUM,
     SUBTRACT,
+    MULTIPLY,
 
 }
