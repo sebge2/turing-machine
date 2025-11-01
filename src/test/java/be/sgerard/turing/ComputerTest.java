@@ -16,19 +16,28 @@ class ComputerTest {
     class Sum {
 
         @Test
-        void sum10() {
-            final int actual = computer.compute(10, NumericOperationName.SUM);
-
-            assertEquals(11, actual);
+        void sum7plus8() {
+            final int actual = computer.compute(7, 8, NumericOperationName.SUM);
+            assertEquals(15, actual);
         }
 
         @Test
-        void sum0() {
-            final int actual = computer.compute(0, NumericOperationName.SUM);
-
-            assertEquals(1, actual);
+        void sum9plus9() {
+            final int actual = computer.compute(9, 9, NumericOperationName.SUM);
+            assertEquals(18, actual);
         }
 
+        @Test
+        void sum0plus5() {
+            final int actual = computer.compute(0, 5, NumericOperationName.SUM);
+            assertEquals(5, actual);
+        }
+
+        @Test
+        void sum5plus0() {
+            final int actual = computer.compute(5, 0, NumericOperationName.SUM);
+            assertEquals(5, actual);
+        }
     }
 
     @DisplayName("Subtract")
