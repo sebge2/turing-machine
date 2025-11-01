@@ -24,6 +24,8 @@ import static java.util.Arrays.asList;
  */
 public class SumOperator implements NumericOperator {
 
+    public static final SumOperator INSTANCE = new SumOperator();
+
     private static final String READ_A = "READ_A";
 
     private static String F(int a, String suffix) {

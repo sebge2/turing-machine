@@ -6,18 +6,18 @@ import lombok.experimental.UtilityClass;
 public class NumericOperationUtils {
 
     public static NumericFunction add(int left, int right) {
-        return new NumericFunction(left, right, new SumOperator());
+        return new NumericFunction(left, right, SumOperator.INSTANCE);
     }
 
     public static NumericFunction minus(int left, int right) {
-        return new NumericFunction(left, right, new MinusOperator());
+        return new NumericFunction(left, right, MinusOperator.INSTANCE);
     }
 
     public static NumericFunction multiply(int left, int right) {
-        return new NumericFunction(left, right, new MultiplyOperator());
+        return new NumericFunction(left, right, MultiplyOperator.INSTANCE);
     }
 
     public static NumericFunction divide(int left, int right) {
-        return new NumericFunction(left, right, new DivideOperator());
+        return new NumericFunction(left, right, DivideOperator.INSTANCE);
     }
 }

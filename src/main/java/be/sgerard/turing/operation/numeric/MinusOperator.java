@@ -27,10 +27,12 @@ import static java.util.Arrays.asList;
  */
 public class MinusOperator implements NumericOperator {
 
-    public static final String TABLE_B = "B";
-    public static final String TABLE_C = "C";
-    public static final String TABLE_D = "D";
-    public static final String TABLE_E = "E";
+    public static final MinusOperator INSTANCE = new MinusOperator();
+
+    private static final String TABLE_B = "B";
+    private static final String TABLE_C = "C";
+    private static final String TABLE_D = "D";
+    private static final String TABLE_E = "E";
 
     // New entry / decision states
     private static final String READ_A = "READ_A";

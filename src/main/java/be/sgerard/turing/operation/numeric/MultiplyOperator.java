@@ -21,6 +21,8 @@ import static java.util.Arrays.asList;
  */
 public class MultiplyOperator implements NumericOperator {
 
+    public static final MultiplyOperator INSTANCE = new MultiplyOperator();
+
     // Generic state names
     private static final String READ_A = "READ_A";
 

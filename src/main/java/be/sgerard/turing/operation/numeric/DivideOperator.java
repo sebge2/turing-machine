@@ -21,6 +21,8 @@ import static java.util.Arrays.asList;
  */
 public class DivideOperator implements NumericOperator {
 
+    public static final DivideOperator INSTANCE = new DivideOperator();
+
     private static final String READ_A = "READ_A";
 
     private static String F(int a, String suffix) {
