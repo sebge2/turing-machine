@@ -131,5 +131,34 @@ class ComputerTest {
             assertEquals(7, actual);
         }
     }
+
+    @DisplayName("Divide")
+    @Nested
+    class DivideSingleDigit {
+
+        @Test
+        void div8by2() {
+            final int actual = computer.compute(divide(8, 2));
+            assertEquals(4, actual);
+        }
+
+        @Test
+        void div7by3FloorsTo2() {
+            final int actual = computer.compute(divide(7, 3));
+            assertEquals(2, actual);
+        }
+
+        @Test
+        void div0by5Is0() {
+            final int actual = computer.compute(divide(0, 5));
+            assertEquals(0, actual);
+        }
+
+        @Test
+        void div5by1Is5() {
+            final int actual = computer.compute(divide(5, 1));
+            assertEquals(5, actual);
+        }
+    }
 }
 

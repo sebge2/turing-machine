@@ -16,4 +16,8 @@ public class NumericOperationUtils {
     public static NumericFunction multiply(int left, int right) {
         return new NumericFunction(left, right, new MultiplyOperator());
     }
+
+    public static NumericFunction divide(int left, int right) {
+        return new NumericFunction(left, right, new DivideOperator());
+    }
 }
