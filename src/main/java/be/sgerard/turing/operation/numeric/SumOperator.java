@@ -1,8 +1,9 @@
-package be.sgerard.turing.operation;
+package be.sgerard.turing.operation.numeric;
 
 import be.sgerard.turing.RegisterAction;
 import be.sgerard.turing.Transition;
 import be.sgerard.turing.TransitionTable;
+import be.sgerard.turing.operation.NumericOperator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,12 +17,12 @@ import static java.util.Arrays.asList;
  *
  * Stage 1.1 limitation: A and B must be single digits 0..9.
  *
- * This mirrors the general approach used by {@link MultiplyOperation} by generating
+ * This mirrors the general approach used by {@link MultiplyOperator} by generating
  * family states per first operand (and second when needed) and handling carry propagation.
  *
  * @author Jetbrains Junie
  */
-public class SumOperation implements NumericOperation {
+public class SumOperator implements NumericOperator {
 
     private static final String READ_A = "READ_A";
 
@@ -31,11 +32,6 @@ public class SumOperation implements NumericOperation {
 
     private static String FB(int a, int b, String suffix) {
         return "F" + a + "_B" + b + "_" + suffix;
-    }
-
-    @Override
-    public NumericOperationName getName() {
-        return NumericOperationName.SUM;
     }
 
     @Override

@@ -6,8 +6,7 @@ import java.util.Optional;
 
 import static java.util.Collections.unmodifiableList;
 
-public record Register<S>(List<S> symbols,
-                          int cursor) {
+public record Register<S>(List<S> symbols, int cursor) {
 
     public static <S> Register<S> create(List<S> symbols) {
         return new Register<>(symbols, 0);

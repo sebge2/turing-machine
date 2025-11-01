@@ -5,9 +5,7 @@ import be.sgerard.turing.TransitionTable;
 
 import java.util.List;
 
-public interface Operation<S > {
-
-    NumericOperationName getName();
+public interface Operator<S > {
 
     List<TransitionTable<S>> getTransitions();
 

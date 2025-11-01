@@ -1,32 +1,19 @@
 package be.sgerard.turing;
 
-import be.sgerard.turing.operation.NumericOperation;
-import be.sgerard.turing.operation.NumericOperationName;
+import be.sgerard.turing.operation.Function;
+import be.sgerard.turing.operation.Operator;
 
 import java.util.List;
 
-import static be.sgerard.turing.operation.NumericOperationUtils.*;
-
 public class Computer {
 
-    public int compute(int input, NumericOperationName operationName) {
-        final NumericOperation operation = getNumericOperation(operationName);
+    public <I, O, S> O compute(Function<I, O, S> function) {
+        final Operator<S> operation = function.getOperator();
 
-        final List<TransitionTable<Integer>> transitions = operation.getTransitions();
-        final GlobalState<Integer> state = new GlobalState<>(transitions, transitions.getFirst(), Register.create(toNumericSymbols(input)));
+        final List<TransitionTable<S>> transitions = operation.getTransitions();
+        final GlobalState<S> state = new GlobalState<>(transitions, transitions.getFirst(), Register.create(function.toState(function.getOperands())));
 
-        return toIntValue(
-                doCompute(state)
-        );
-    }
-
-    public int compute(int a, int b, NumericOperationName operationName) {
-        final NumericOperation operation = getNumericOperation(operationName);
-
-        final List<TransitionTable<Integer>> transitions = operation.getTransitions();
-        final GlobalState<Integer> state = new GlobalState<>(transitions, transitions.getFirst(), Register.create(toNumericSymbols(a, b)));
-
-        return toIntValue(
+        return function.fromState(
                 doCompute(state)
         );
     }
@@ -50,4 +37,5 @@ public class Computer {
             );
         };
     }
+
 }

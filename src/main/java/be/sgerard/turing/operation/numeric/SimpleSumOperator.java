@@ -1,7 +1,8 @@
-package be.sgerard.turing.operation;
+package be.sgerard.turing.operation.numeric;
 
 import be.sgerard.turing.Transition;
 import be.sgerard.turing.TransitionTable;
+import be.sgerard.turing.operation.NumericOperator;
 
 import java.util.List;
 
@@ -11,15 +12,10 @@ import static java.util.Arrays.asList;
 /**
  * Based on Youtube video from Science Etonante
  */
-public class SimpleSumOperation implements NumericOperation {
+public class SimpleSumOperator implements NumericOperator {
 
     public static final String TABLE_A = "A";
     public static final String TABLE_B = "B";
-
-    @Override
-    public NumericOperationName getName() {
-        return NumericOperationName.SUM;
-    }
 
     @Override
     public List<TransitionTable<Integer>> getTransitions() {

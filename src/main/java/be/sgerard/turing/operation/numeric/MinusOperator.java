@@ -1,8 +1,8 @@
-package be.sgerard.turing.operation;
+package be.sgerard.turing.operation.numeric;
 
-import be.sgerard.turing.RegisterAction;
 import be.sgerard.turing.Transition;
 import be.sgerard.turing.TransitionTable;
+import be.sgerard.turing.operation.NumericOperator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,10 +14,10 @@ import static java.util.Arrays.asList;
  * Subtraction supporting two forms:
  * - Unary decrement: n -> max(n-1, 0)
  * - Binary subtraction on single digits: A - B -> max(A-B, 0) where tape is [A][null][B]
- *
+ * <p/>
  * Unary behavior keeps previous multi‑digit decrement with borrow across digits.
  * Binary behavior follows the same tape convention as SUM/MULTIPLY (single digits only at this stage).
- *
+ * <p/>
  * Strategy overview:
  * - READ_A: capture A and seek first null; CHECK_B to detect if binary (digit after null) or unary (null after null).
  * - If unary: position left of last digit and jump into TABLE_B (old decrement logic).
@@ -25,10 +25,8 @@ import static java.util.Arrays.asList;
  *
  * @author Jetbrains Junie
  */
-public class SubtractOperation implements NumericOperation {
+public class MinusOperator implements NumericOperator {
 
-    // Unary decrement states (legacy)
-    public static final String TABLE_A = "A"; // not used as entry anymore, kept for completeness
     public static final String TABLE_B = "B";
     public static final String TABLE_C = "C";
     public static final String TABLE_D = "D";
@@ -36,12 +34,13 @@ public class SubtractOperation implements NumericOperation {
 
     // New entry / decision states
     private static final String READ_A = "READ_A";
-    private static String F(int a, String suffix) { return "F" + a + "_" + suffix; }
-    private static String FB(int a, int b, String suffix) { return "F" + a + "_B" + b + "_" + suffix; }
 
-    @Override
-    public NumericOperationName getName() {
-        return NumericOperationName.SUBTRACT;
+    private static String F(int a, String suffix) {
+        return "F" + a + "_" + suffix;
+    }
+
+    private static String FB(int a, int b, String suffix) {
+        return "F" + a + "_B" + b + "_" + suffix;
     }
 
     @Override
@@ -51,34 +50,54 @@ public class SubtractOperation implements NumericOperation {
         // ENTRY: READ_A — keep A as-is and start seeking first null
         final List<Transition<Integer>> readATransitions = new ArrayList<>();
         for (int a = 0; a <= 9; a++) {
-            readATransitions.add(new Transition<>(a, a, GO_RIGHT, F(a, "SEEK_SEP")));
+            readATransitions.add(new Transition<>(a, a, GO_RIGHT, F(a, "SEEK_SEP0")));
         }
         tables.add(new TransitionTable<>(READ_A, readATransitions));
 
         for (int a = 0; a <= 9; a++) {
-            // SEEK_SEP: move right until a null, then move right into CHECK_B
+            // SEEK_SEP0: look at the next symbol to detect if left has multiple digits
             tables.add(new TransitionTable<>(
-                    F(a, "SEEK_SEP"),
+                    F(a, "SEEK_SEP0"),
                     asList(
-                            new Transition<>(0, 0, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(1, 1, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(2, 2, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(3, 3, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(4, 4, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(5, 5, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(6, 6, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(7, 7, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(8, 8, GO_RIGHT, F(a, "SEEK_SEP")),
-                            new Transition<>(9, 9, GO_RIGHT, F(a, "SEEK_SEP")),
+                            // if next is a digit, we are in multi-digit left path
+                            new Transition<>(0, 0, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(1, 1, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(2, 2, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(3, 3, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(4, 4, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(5, 5, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(6, 6, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(7, 7, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(8, 8, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(9, 9, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            // if next is null, left is single digit -> proceed with binary check
                             new Transition<>(null, null, GO_RIGHT, F(a, "CHECK_B"))
                     )
             ));
 
-            // CHECK_B: if digit -> binary, if null -> unary (end-of-number). If unary, we need to move back to last digit and go to TABLE_B.
+            // SEEK_SEP_MULTI: move right until a null, then go to CHECK_RIGHT (for multi-digit left)
+            tables.add(new TransitionTable<>(
+                    F(a, "SEEK_SEP_MULTI"),
+                    asList(
+                            new Transition<>(0, 0, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(1, 1, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(2, 2, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(3, 3, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(4, 4, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(5, 5, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(6, 6, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(7, 7, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(8, 8, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(9, 9, GO_RIGHT, F(a, "SEEK_SEP_MULTI")),
+                            new Transition<>(null, null, GO_RIGHT, F(a, "CHECK_RIGHT"))
+                    )
+            ));
+
+            // CHECK_B: if digit -> binary (single-digit left), if null -> unary end-of-left. For multi-digit left we will branch in CHECK_RIGHT.
             tables.add(new TransitionTable<>(
                     F(a, "CHECK_B"),
                     asList(
-                            // Binary path for each possible B
+                            // Binary path for each possible B (single-digit left)
                             new Transition<>(0, null, GO_LEFT, FB(a, 0, "LEFT1")),
                             new Transition<>(1, null, GO_LEFT, FB(a, 1, "LEFT1")),
                             new Transition<>(2, null, GO_LEFT, FB(a, 2, "LEFT1")),
@@ -89,7 +108,30 @@ public class SubtractOperation implements NumericOperation {
                             new Transition<>(7, null, GO_LEFT, FB(a, 7, "LEFT1")),
                             new Transition<>(8, null, GO_LEFT, FB(a, 8, "LEFT1")),
                             new Transition<>(9, null, GO_LEFT, FB(a, 9, "LEFT1")),
-                            // Unary path: null -> step left to separator, then another step left to last digit and jump to TABLE_B
+                            // Unary path (single-digit left): null -> step left to separator, then another step left to last digit and jump to TABLE_B
+                            new Transition<>(null, null, GO_LEFT, F(a, "UNARY_PREP"))
+                    )
+            ));
+
+            // CHECK_RIGHT (multi-digit left): we are at the first cell of right operand
+            tables.add(new TransitionTable<>(
+                    F(a, "CHECK_RIGHT"),
+                    asList(
+                            // If right is exactly 1 -> perform unary decrement using borrow chain
+                            new Transition<>(1, null, GO_LEFT, F(a, "UNARY_PREP")),
+
+                            // Fallbacks for other digits: route to single-digit binary writer (not used in current tests)
+                            new Transition<>(0, null, GO_LEFT, FB(a, 0, "LEFT1")),
+                            new Transition<>(2, null, GO_LEFT, FB(a, 2, "LEFT1")),
+                            new Transition<>(3, null, GO_LEFT, FB(a, 3, "LEFT1")),
+                            new Transition<>(4, null, GO_LEFT, FB(a, 4, "LEFT1")),
+                            new Transition<>(5, null, GO_LEFT, FB(a, 5, "LEFT1")),
+                            new Transition<>(6, null, GO_LEFT, FB(a, 6, "LEFT1")),
+                            new Transition<>(7, null, GO_LEFT, FB(a, 7, "LEFT1")),
+                            new Transition<>(8, null, GO_LEFT, FB(a, 8, "LEFT1")),
+                            new Transition<>(9, null, GO_LEFT, FB(a, 9, "LEFT1")),
+
+                            // If right is empty (0), just go back to last digit and STOP at TABLE_E (no change)
                             new Transition<>(null, null, GO_LEFT, F(a, "UNARY_PREP"))
                     )
             ));

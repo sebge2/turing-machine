@@ -1,8 +1,9 @@
-package be.sgerard.turing.operation;
+package be.sgerard.turing.operation.numeric;
 
 import be.sgerard.turing.RegisterAction;
 import be.sgerard.turing.Transition;
 import be.sgerard.turing.TransitionTable;
+import be.sgerard.turing.operation.NumericOperator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,7 +19,7 @@ import static java.util.Arrays.asList;
  *
  * @author Jetbrains Junie
  */
-public class MultiplyOperation implements NumericOperation {
+public class MultiplyOperator implements NumericOperator {
 
     // Generic state names
     private static final String READ_A = "READ_A";
@@ -26,11 +27,6 @@ public class MultiplyOperation implements NumericOperation {
     // For each a in 0..9 we create family of states with prefix F{a}_*
     private static String F(int a, String suffix) {
         return "F" + a + "_" + suffix;
-    }
-
-    @Override
-    public NumericOperationName getName() {
-        return NumericOperationName.MULTIPLY;
     }
 
     @Override
