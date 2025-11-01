@@ -23,7 +23,8 @@ public record Register<S>(List<S> symbols,
             return Optional.empty();
         }
 
-        return Optional.of(symbols.get(cursor));
+        final S value = symbols.get(cursor);
+        return (value == null) ? Optional.empty() : Optional.of(value);
     }
 
     public Register<S> update(S newSymbol) {

@@ -36,6 +36,7 @@ public class NumericOperationUtils {
     public static NumericOperation getNumericOperation(NumericOperationName name) {
         return switch (name) {
             case SUM -> new SumOperation();
+            case SUBTRACT -> new SubtractOperation();
         };
     }
 }
