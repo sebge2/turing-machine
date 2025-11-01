@@ -71,6 +71,36 @@ class ComputerTest {
 
             assertEquals(999, actual);
         }
+
+        @Test
+        void subtract7minus3() {
+            final int actual = computer.compute(7, 3, NumericOperationName.SUBTRACT);
+            assertEquals(4, actual);
+        }
+
+        @Test
+        void subtract3minus7FloorsTo0() {
+            final int actual = computer.compute(3, 7, NumericOperationName.SUBTRACT);
+            assertEquals(0, actual);
+        }
+
+        @Test
+        void subtract9minus9() {
+            final int actual = computer.compute(9, 9, NumericOperationName.SUBTRACT);
+            assertEquals(0, actual);
+        }
+
+        @Test
+        void subtract0minus5FloorsTo0() {
+            final int actual = computer.compute(0, 5, NumericOperationName.SUBTRACT);
+            assertEquals(0, actual);
+        }
+
+        @Test
+        void subtract5minus0() {
+            final int actual = computer.compute(5, 0, NumericOperationName.SUBTRACT);
+            assertEquals(5, actual);
+        }
     }
 
     @DisplayName("Multiply")
